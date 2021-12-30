@@ -16,8 +16,8 @@ public class EmailService {
         this.emailSender = new EmailSender(emailSender, credential);
     }
 
-    public MimeMessage getEmail(String recipientEmail, String subject, Map<String, Object> params, String template) throws MessagingException, TemplateException, IOException {
-        return this.emailSender.getEmail(recipientEmail, subject, params, template);
+    public MimeMessage getEmail(String recipientEmail, String subject, Map<String, Object> params, String templateDirectory, String template) throws MessagingException, TemplateException, IOException {
+        return this.emailSender.getEmail(recipientEmail, subject, params, templateDirectory, template);
     }
 
     public void sendEmail(MimeMessage email) throws MessagingException {

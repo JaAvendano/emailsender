@@ -31,7 +31,7 @@ public class EmailSender {
             Transport.send(message);
     }
 
-    public MimeMessage getEmail(String recipientEmail, String subject, Map<String, Object> params, String template) throws MessagingException, TemplateException, IOException {
+    public MimeMessage getEmail(String recipientEmail, String subject, Map<String, Object> params, String templateDirectory, String template) throws MessagingException, TemplateException, IOException {
 
         //Session session = this.setEmailSession(this.setEmailProperties(), this.getPasswordAuthentication(this.emailSender, this.password));
         MimeMessage message = new MimeMessage(this.session);
@@ -40,21 +40,21 @@ public class EmailSender {
             helper.setTo(recipientEmail);
             helper.setFrom(this.emailSender);
             helper.setSentDate(new Date());
-            helper.setText(this.getEmailContent(params, template), true);
+            helper.setText(this.getEmailContent(params, templateDirectory, template), true);
 
         return message;
     }
 
-    private String getEmailContent(Map<String, Object> params, String templateName) throws TemplateException, IOException {
+    private String getEmailContent(Map<String, Object> params,String emailBaseDirectory, String templateName) throws TemplateException, IOException {
 
-            Template template = this.getFreeMarkerConfigurer().getConfiguration().getTemplate(templateName);
+            Template template = this.getFreeMarkerConfigurer(emailBaseDirectory).getConfiguration().getTemplate(templateName);
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, params);
 
     }
 
-    private FreeMarkerConfigurer getFreeMarkerConfigurer(){
+    private FreeMarkerConfigurer getFreeMarkerConfigurer(String emailBaseDirectory){
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-        TemplateLoader templateLoader = new ClassTemplateLoader(this.getClass(), "/email-templates");
+        TemplateLoader templateLoader = new ClassTemplateLoader(this.getClass(), emailBaseDirectory);
         configuration.setTemplateLoader(templateLoader);
 
         FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
